@@ -1,0 +1,89 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Users\\Hammad Younas\\Desktop\\DeviceManager\\DeviceManager\\obj\\Debug\\net8.0-ios\\ios-arm64\\scopedcss\\bundle\\DeviceManager.styles.css",
+      "PackagePath": "staticwebassets\\DeviceManager.styles.css"
+    },
+    {
+      "Id": "C:\\Users\\Hammad Younas\\Desktop\\DeviceManager\\DeviceManager\\wwwroot\\Images\\logo.jpg",
+      "PackagePath": "staticwebassets\\Images\\logo.jpg"
+    },
+    {
+      "Id": "C:\\Users\\Hammad Younas\\Desktop\\DeviceManager\\DeviceManager\\wwwroot\\Images\\logo2.jpg",
+      "PackagePath": "staticwebassets\\Images\\logo2.jpg"
+    },
+    {
+      "Id": "C:\\Users\\Hammad Younas\\Desktop\\DeviceManager\\DeviceManager\\wwwroot\\Images\\profile1.jpg",
+      "PackagePath": "staticwebassets\\Images\\profile1.jpg"
+    },
+    {
+      "Id": "C:\\Users\\Hammad Younas\\Desktop\\DeviceManager\\DeviceManager\\wwwroot\\css\\app-dark.css",
+      "PackagePath": "staticwebassets\\css\\app-dark.css"
+    },
+    {
+      "Id": "C:\\Users\\Hammad Younas\\Desktop\\DeviceManager\\DeviceManager\\wwwroot\\css\\app-light.css",
+      "PackagePath": "staticwebassets\\css\\app-light.css"
+    },
+    {
+      "Id": "C:\\Users\\Hammad Younas\\Desktop\\DeviceManager\\DeviceManager\\wwwroot\\css\\app.css",
+      "PackagePath": "staticwebassets\\css\\app.css"
+    },
+    {
+      "Id": "C:\\Users\\Hammad Younas\\Desktop\\DeviceManager\\DeviceManager\\wwwroot\\css\\bootstrap\\bootstrap.min.css",
+      "PackagePath": "staticwebassets\\css\\bootstrap\\bootstrap.min.css"
+    },
+    {
+      "Id": "C:\\Users\\Hammad Younas\\Desktop\\DeviceManager\\DeviceManager\\wwwroot\\css\\bootstrap\\bootstrap.min.css.map",
+      "PackagePath": "staticwebassets\\css\\bootstrap\\bootstrap.min.css.map"
+    },
+    {
+      "Id": "C:\\Users\\Hammad Younas\\Desktop\\DeviceManager\\DeviceManager\\wwwroot\\css\\css-pages\\admin-access.css",
+      "PackagePath": "staticwebassets\\css\\css-pages\\admin-access.css"
+    },
+    {
+      "Id": "C:\\Users\\Hammad Younas\\Desktop\\DeviceManager\\DeviceManager\\wwwroot\\css\\css-pages\\devices.css",
+      "PackagePath": "staticwebassets\\css\\css-pages\\devices.css"
+    },
+    {
+      "Id": "C:\\Users\\Hammad Younas\\Desktop\\DeviceManager\\DeviceManager\\wwwroot\\css\\css-pages\\home.css",
+      "PackagePath": "staticwebassets\\css\\css-pages\\home.css"
+    },
+    {
+      "Id": "C:\\Users\\Hammad Younas\\Desktop\\DeviceManager\\DeviceManager\\wwwroot\\css\\css-pages\\settings.css",
+      "PackagePath": "staticwebassets\\css\\css-pages\\settings.css"
+    },
+    {
+      "Id": "C:\\Users\\Hammad Younas\\Desktop\\DeviceManager\\DeviceManager\\wwwroot\\css\\css-pages\\support.css",
+      "PackagePath": "staticwebassets\\css\\css-pages\\support.css"
+    },
+    {
+      "Id": "C:\\Users\\Hammad Younas\\Desktop\\DeviceManager\\DeviceManager\\wwwroot\\favicon.png",
+      "PackagePath": "staticwebassets\\favicon.png"
+    },
+    {
+      "Id": "C:\\Users\\Hammad Younas\\Desktop\\DeviceManager\\DeviceManager\\wwwroot\\index.html",
+      "PackagePath": "staticwebassets\\index.html"
+    },
+    {
+      "Id": "C:\\Users\\Hammad Younas\\Desktop\\DeviceManager\\DeviceManager\\wwwroot\\js\\site.js",
+      "PackagePath": "staticwebassets\\js\\site.js"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0-ios\\ios-arm64\\staticwebassets\\msbuild.DeviceManager.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0-ios\\ios-arm64\\staticwebassets\\msbuild.build.DeviceManager.props",
+      "PackagePath": "build\\DeviceManager.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0-ios\\ios-arm64\\staticwebassets\\msbuild.buildMultiTargeting.DeviceManager.props",
+      "PackagePath": "buildMultiTargeting\\DeviceManager.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0-ios\\ios-arm64\\staticwebassets\\msbuild.buildTransitive.DeviceManager.props",
+      "PackagePath": "buildTransitive\\DeviceManager.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

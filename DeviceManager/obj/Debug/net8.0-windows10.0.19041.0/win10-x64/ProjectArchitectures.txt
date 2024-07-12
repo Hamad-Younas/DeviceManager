@@ -1,0 +1,1 @@
+E:\fiverr\maui\latest\DeviceManager\DeviceManager\DeviceManager.csproj;x64

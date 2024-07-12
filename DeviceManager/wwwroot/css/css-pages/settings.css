@@ -1,0 +1,7 @@
+﻿.settings .grid {
+    min-height: fit-content;
+    border-radius: 0.325rem;
+    background-color: var(--background-color-secondary);
+    padding: 1rem;
+}
+

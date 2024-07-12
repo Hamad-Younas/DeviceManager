@@ -1,0 +1,551 @@
+﻿@page "/"
+@inherits Home_Base
+@using System.Diagnostics
+@using DeviceManager.Models
+@using DeviceManager.Services
+@using MatBlazor
+@inject AdminAccessService AdminAccessService
+@inject DevicesService DevicesService
+@inject ThemeService ThemeService
+@inject IJSRuntime JSRuntime
+
+
+
+
+
+
+
+<div class="settings">
+    @if (LoadingModel.IsLoading)
+    {
+        <p>loading...</p>
+    }
+    else
+    {
+        @if (support != null)
+        {
+            if (ThemeService.CurrentTheme == "system")
+            {
+                AppTheme systemTheme = Application.Current!.RequestedTheme;
+                ThemeService.CurrentTheme = (systemTheme == AppTheme.Dark) ? "dark" : "light";
+                if (ThemeService.CurrentTheme == "dark")
+                {
+                    <h1>
+                        <span>
+                            <img src="/Images/logo2.jpg" width="60" height="40" alt="logo" />
+                        </span> @support.displayName
+                    </h1>
+                }
+                else
+                {
+                    <h1>
+                        <span>
+                            <img src="/Images/logo.jpg" width="60" height="40" alt="logo" />
+                        </span> @support.displayName
+                    </h1>
+                }
+            }
+            else if (ThemeService.CurrentTheme == "dark")
+            {
+                <h1>
+                    <span>
+                        <img src="/Images/logo.jpg" width="60" height="40" alt="logo" />
+                    </span> @support.displayName
+                </h1>
+            }
+            else
+            {
+                <h1>
+                    <span>
+                        <img src="/Images/logo2.jpg" width="60" height="40" alt="logo" />
+                    </span> @support.displayName
+                </h1>
+            }
+        }
+        if (DevicesService.currentDevice != null)
+        {
+            upn = GetUPN();
+            <div class="settings grid" key="@refresh">
+                    @{
+                        var ulast = DevicesService.currentDevice.username;
+                        int spaceIndex = ulast.IndexOf('@');
+                        string lastName = spaceIndex != -1 ? ulast.Substring(0,spaceIndex) : string.Empty;
+                    }
+                <h2>Welcome <span class="primary-color">@lastName</span></h2>
+                <div class="gridhome">
+                    <div id="USERNAME" class="user-card">
+                        <div class="card-header">
+                            <div class="profile-info">
+                                <div class="activity-info">
+                                    <svg width="32" height="32" viewBox="0 0 28 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M13.7981 15.4146C15.9158 15.4146 17.7493 14.655 19.2478 13.1564C20.7459 11.6582 21.5056 9.82494 21.5056 7.70706C21.5056 5.58981 20.7461 3.75637 19.2476 2.25756C17.749 0.7595 15.9155 0 13.7981 0C11.6802 0 9.84688 0.7595 8.34863 2.25781C6.85037 3.75612 6.09056 5.58963 6.09056 7.70706C6.09056 9.82494 6.85031 11.6584 8.34869 13.1567C9.84744 14.6548 11.6809 15.4146 13.7981 15.4146H13.7981ZM9.67481 3.58375C10.8244 2.43406 12.1731 1.87525 13.7981 1.87525C15.4229 1.87525 16.7718 2.43406 17.9216 3.58375C19.0713 4.73362 19.6304 6.0825 19.6304 7.707C19.6304 9.332 19.0713 10.6807 17.9216 11.8306C16.7718 12.9805 15.4229 13.5393 13.7981 13.5393C12.1736 13.5393 10.825 12.9803 9.67481 11.8306C8.52487 10.6809 7.96581 9.33206 7.96581 7.70706C7.96581 6.0825 8.52487 4.73362 9.67481 3.58375ZM27.2842 24.6064C27.2409 23.9829 27.1536 23.3027 27.0249 22.5845C26.895 21.8608 26.7278 21.1768 26.5276 20.5515C26.3206 19.9053 26.0396 19.2671 25.6916 18.6555C25.331 18.0208 24.9073 17.468 24.4316 17.0132C23.9343 16.5374 23.3254 16.1548 22.6213 15.8757C21.9197 15.5982 21.1421 15.4576 20.3103 15.4576C19.9836 15.4576 19.6678 15.5916 19.0576 15.9888C18.6239 16.2712 18.189 16.5516 17.7527 16.8301C17.3335 17.0972 16.7656 17.3474 16.0642 17.574C15.3799 17.7954 14.6851 17.9077 13.999 17.9077C13.3135 17.9077 12.6186 17.7954 11.9338 17.574C11.2332 17.3476 10.6651 17.0974 10.2466 16.8303C9.76094 16.52 9.32156 16.2368 8.94044 15.9885C8.33081 15.5913 8.01487 15.4572 7.68825 15.4572C6.85619 15.4572 6.07887 15.5981 5.37744 15.876C4.67381 16.1546 4.06469 16.5371 3.56687 17.0134C3.09131 17.4685 2.6675 18.0209 2.30712 18.6555C1.95975 19.2671 1.6785 19.905 1.47144 20.5518C1.27144 21.177 1.10425 21.8608 0.974373 22.5845C0.845436 23.3018 0.758311 23.9822 0.715061 24.6072C0.672561 25.2183 0.651123 25.8542 0.651123 26.4968C0.651123 28.1672 1.18212 29.5195 2.22925 30.5168C3.26344 31.5011 4.63162 32 6.29587 32H21.7041C23.3679 32 24.7361 31.501 25.7705 30.5169C26.8179 29.5202 27.3489 28.1675 27.3489 26.4966C27.3486 25.8518 27.3269 25.2158 27.2842 24.6064ZM24.4776 29.1582C23.7942 29.8086 22.8869 30.1248 21.7038 30.1248H6.29594C5.11262 30.1248 4.20537 29.8086 3.52225 29.1585C2.85212 28.5205 2.52644 27.6497 2.52644 26.4968C2.52644 25.8972 2.54619 25.3052 2.58581 24.7368C2.62431 24.1792 2.70319 23.5666 2.82019 22.9158C2.93562 22.2729 3.08256 21.6697 3.25737 21.1236C3.42512 20.5998 3.65387 20.0813 3.93756 19.5818C4.20831 19.1057 4.51981 18.6973 4.86356 18.3682C5.18512 18.0603 5.59044 17.8084 6.06794 17.6194C6.50956 17.4446 7.00594 17.3489 7.54475 17.3344C7.61037 17.3694 7.72737 17.4361 7.91681 17.5596C8.30231 17.8108 8.74662 18.0974 9.23787 18.4111C9.79163 18.7642 10.5049 19.083 11.3573 19.3581C12.2286 19.6399 13.1173 19.7829 13.9993 19.7829C14.8814 19.7829 15.7703 19.6399 16.6412 19.3584C17.4942 19.0828 18.2073 18.7642 18.7618 18.4106C19.2645 18.0894 19.6964 17.8111 20.0818 17.5596C20.2713 17.4363 20.3883 17.3694 20.4539 17.3345C20.993 17.3489 21.4893 17.4446 21.9312 17.6194C22.4085 17.8084 22.8138 18.0606 23.1353 18.3681C23.4791 18.697 23.7906 19.1055 24.0613 19.5821C24.3453 20.0813 24.5743 20.6001 24.7418 21.1233C24.9168 21.6702 25.064 22.2732 25.1793 22.9155C25.2959 23.5676 25.3751 24.1804 25.4136 24.7371V24.7376C25.4534 25.3037 25.4734 25.8955 25.4737 26.4968C25.4734 27.6499 25.1478 28.5206 24.4776 29.1582H24.4776Z" fill="#CCCCCC" />
+                                    </svg>
+                                </div>
+
+                                <div class="user-details">
+                                    <div>@DevicesService.currentDevice.username</div>
+                                    <p class="secondary-color">USERNAME</p>
+                                </div>
+                            </div>
+                            <div class="center-icon">
+                                <svg @onclick="(async () => await CopyToClipboard(DevicesService.currentDevice.username))" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-copy copy-button" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="UPN" class="user-card">
+                        <div class="card-header">
+                            <div class="profile-info">
+                                <div class="activity-info">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-shield-check" viewBox="0 0 16 16">
+                                        <path d="M5.338 1.59a61 61 0 0 0-2.837.856.48.48 0 0 0-.328.39c-.554 4.157.726 7.19 2.253 9.188a10.7 10.7 0 0 0 2.287 2.233c.346.244.652.42.893.533q.18.085.293.118a1 1 0 0 0 .101.025 1 1 0 0 0 .1-.025q.114-.034.294-.118c.24-.113.547-.29.893-.533a10.7 10.7 0 0 0 2.287-2.233c1.527-1.997 2.807-5.031 2.253-9.188a.48.48 0 0 0-.328-.39c-.651-.213-1.75-.56-2.837-.855C9.552 1.29 8.531 1.067 8 1.067c-.53 0-1.552.223-2.662.524zM5.072.56C6.157.265 7.31 0 8 0s1.843.265 2.928.56c1.11.3 2.229.655 2.887.87a1.54 1.54 0 0 1 1.044 1.262c.596 4.477-.787 7.795-2.465 9.99a11.8 11.8 0 0 1-2.517 2.453 7 7 0 0 1-1.048.625c-.28.132-.581.24-.829.24s-.548-.108-.829-.24a7 7 0 0 1-1.048-.625 11.8 11.8 0 0 1-2.517-2.453C1.928 10.487.545 7.169 1.141 2.692A1.54 1.54 0 0 1 2.185 1.43 63 63 0 0 1 5.072.56" />
+                                        <path d="M10.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0" />
+                                    </svg>
+                                </div>
+                                <div class="user-details">
+                                    <div>@DevicesService.currentDevice.upn</div>
+                                    <p class="secondary-color">UPN</p>
+                                </div>
+                            </div>
+                            <div class="center-icon">
+                                <svg @onclick="(async () => await CopyToClipboard(DevicesService.currentDevice.upn))" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-copy copy-button" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="PASSWORD" class="user-card">
+                        <div class="card-header">
+                            <div class="profile-info">
+                                <div class="activity-info">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-key" viewBox="0 0 16 16">
+                                        <path d="M0 8a4 4 0 0 1 7.465-2H14a.5.5 0 0 1 .354.146l1.5 1.5a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0L13 9.207l-.646.647a.5.5 0 0 1-.708 0L11 9.207l-.646.647a.5.5 0 0 1-.708 0L9 9.207l-.646.647A.5.5 0 0 1 8 10h-.535A4 4 0 0 1 0 8m4-3a3 3 0 1 0 2.712 4.285A.5.5 0 0 1 7.163 9h.63l.853-.854a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.793-.793-1-1h-6.63a.5.5 0 0 1-.451-.285A3 3 0 0 0 4 5" />
+                                        <path d="M4 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0" />
+                                    </svg>
+                                </div>
+
+                                <div class="user-details">
+                                    <div>@($"Exp in {AdminAccessService.DaysLeft} days")</div>
+                                    <p class="secondary-color">PASSWORD</p>
+                                </div>
+                            </div>
+                            <div class="center-icon">
+                                @if (AdminAccessService.DaysLeft > 7)
+                                {
+                                    <NavLink class="custom-badge-success copy-button" href="https://account.activedirectory.windowsazure.com/ChangePassword.aspx">
+                                        Change Password
+                                    </NavLink>
+                                }
+                                else
+                                {
+                                    <NavLink class="custom-badge copy-button" href="https://account.activedirectory.windowsazure.com/ChangePassword.aspx">
+                                        Change Password
+                                    </NavLink>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div id="Admin-Access" class="user-card ">
+                        @if(DevicesService.currentDevice.username == "N/A" || upn != DevicesService.currentDevice.primaryUser)
+                        {
+                            <div class="card-header">
+                                <div class="profile-info">
+                                    <div class="activity-info">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lock-fill" viewBox="0 0 16 16">
+                                            <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2" />
+                                        </svg>
+                                    </div>
+                                    <div class="user-details">
+                                        @* <div>@(AdminAccessService.hasAdminAccess ? "Granted" : "Expired")</div> *@
+                                        <div>N/A</div>
+                                        <p class="secondary-color">Admin Access</p>
+                                    </div>
+                                </div>
+                                <div class="center-icon">
+                                    <p class="copy-button" style="background-color: gray; color: black; font-weight:900; padding: 5px 10px; border-radius:5px;">
+                                        Access denied
+                                    </p>
+                                    @* @if (AdminAccessService.hasAdminAccess)
+                                    {
+                                        <p class="custom-badge-success copy-button" @onclick="NavigateToAdminAccessCommand.Execute">
+                                            Request Granted
+                                        </p>
+                                    }
+                                    else
+                                    {
+                                        <p class="custom-badge copy-button" @onclick="NavigateToAdminAccessCommand.Execute">
+                                            Request Access
+                                        </p>
+                                    } *@
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            if (registryStatus.registryStatusValue == -1)
+                            {
+                                <div class="card-header">
+                                    <div class="profile-info">
+                                        <div class="activity-info">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lock-fill" viewBox="0 0 16 16">
+                                                <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2" />
+                                            </svg>
+                                        </div>
+                                        <div class="user-details">
+                                            @* <div>@(AdminAccessService.hasAdminAccess ? "Granted" : "Expired")</div> *@
+                                            <div>Expired</div>
+                                            <p class="secondary-color">Admin Access</p>
+                                        </div>
+                                    </div>
+                                    <div class="center-icon">
+                                        <p class="custom-badge copy-button" @onclick="NavigateToAdminAccessCommand.Execute">
+                                            Request Access
+                                        </p>
+                                        @* @if (AdminAccessService.hasAdminAccess)
+                                        {
+                                        <p class="custom-badge-success copy-button" @onclick="NavigateToAdminAccessCommand.Execute">
+                                        Request Granted
+                                        </p>
+                                        }
+                                        else
+                                        {
+                                        <p class="custom-badge copy-button" @onclick="NavigateToAdminAccessCommand.Execute">
+                                        Request Access
+                                        </p>
+                                        } *@
+                                    </div>
+                                </div>
+                            }
+                            else if (registryStatus.registryStatusValue == 0)
+                            {
+                                <div class="card-header">
+                                    <div class="profile-info">
+                                        <div class="activity-info">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lock-fill" viewBox="0 0 16 16">
+                                                <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2" />
+                                            </svg>
+                                        </div>
+                                        <div class="user-details">
+                                            @* <div>@(AdminAccessService.hasAdminAccess ? "Granted" : "Expired")</div> *@
+                                            <div>Expired</div>
+                                            <p class="secondary-color">Admin Access</p>
+                                        </div>
+                                    </div>
+                                    <div class="center-icon">
+                                        <p class="copy-button" style="background-color: palegoldenrod; color: orange; font-weight:900; padding: 5px 10px; border-radius:5px;">
+                                            Request Pending
+                                        </p>
+                                        @* @if (AdminAccessService.hasAdminAccess)
+                                        {
+                                        <p class="custom-badge-success copy-button" @onclick="NavigateToAdminAccessCommand.Execute">
+                                        Request Granted
+                                        </p>
+                                        }
+                                        else
+                                        {
+                                        <p class="custom-badge copy-button" @onclick="NavigateToAdminAccessCommand.Execute">
+                                        Request Access
+                                        </p>
+                                        } *@
+                                    </div>
+                                </div>
+                            }
+                            else if (registryStatus.registryStatusValue == 1)
+                            {
+                                <div class="card-header">
+                                    <div class="profile-info">
+                                        <div class="activity-info">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-unlock-fill" viewBox="0 0 16 16">
+                                                <path d="M11 1a2 2 0 0 0-2 2v4a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h5V3a3 3 0 0 1 6 0v4a.5.5 0 0 1-1 0V3a2 2 0 0 0-2-2" />
+                                            </svg>
+                                        </div>
+                                        <div class="user-details">
+                                            @* <div>@(AdminAccessService.hasAdminAccess ? "Granted" : "Expired")</div> *@
+                                            <div>@expdate</div>
+                                            <p class="secondary-color">Admin Access</p>
+                                        </div>
+                                    </div>
+                                    <div class="center-icon">
+                                        <p class="custom-badge-success copy-button" @onclick="ShowConfirmation">
+                                            Remove Access
+                                        </p>
+                                        @* @if (AdminAccessService.hasAdminAccess)
+                                        {
+                                        <p class="custom-badge-success copy-button" @onclick="NavigateToAdminAccessCommand.Execute">
+                                        Request Granted
+                                        Request Granted
+                                        </p>
+                                        }
+                                        else
+                                        {
+                                        <p class="custom-badge copy-button" @onclick="NavigateToAdminAccessCommand.Execute">
+                                        Request Access
+                                        </p>
+                                        } *@
+                                    </div>
+                                </div>
+                            }
+                            else if (registryStatus.registryStatusValue == 2)
+                            {
+                                <div class="card-header">
+                                    <div class="profile-info">
+                                        <div class="activity-info">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lock-fill" viewBox="0 0 16 16">
+                                                <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2" />
+                                            </svg>
+                                        </div>
+                                        <div class="user-details">
+                                            @* <div>@(AdminAccessService.hasAdminAccess ? "Granted" : "Expired")</div> *@
+                                            <div>N/A</div>
+                                            <p class="secondary-color">Admin Access</p>
+                                        </div>
+                                    </div>
+                                    <div class="center-icon">
+                                        <p class="copy-button" style="background-color: gray; color: black; font-weight:900; padding: 5px 10px; border-radius:5px;">
+                                            Access denied
+                                        </p>
+                                        @* @if (AdminAccessService.hasAdminAccess)
+                                        {
+                                        <p class="custom-badge-success copy-button" @onclick="NavigateToAdminAccessCommand.Execute">
+                                        Request Granted
+                                        </p>
+                                        }
+                                        else
+                                        {
+                                        <p class="custom-badge copy-button" @onclick="NavigateToAdminAccessCommand.Execute">
+                                        Request Access
+                                        </p>
+                                        } *@
+                                    </div>
+                                </div>
+                            }
+                            else if (registryStatus.registryStatusValue == 3)
+                            {
+                                <div class="card-header">
+                                    <div class="profile-info">
+                                        <div class="activity-info">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-unlock-fill" viewBox="0 0 16 16">
+                                                <path d="M11 1a2 2 0 0 0-2 2v4a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h5V3a3 3 0 0 1 6 0v4a.5.5 0 0 1-1 0V3a2 2 0 0 0-2-2" />
+                                            </svg>
+                                        </div>
+                                        <div class="user-details">
+                                            @* <div>@(AdminAccessService.hasAdminAccess ? "Granted" : "Expired")</div> *@
+                                            <div>Expired</div>
+                                            <p class="secondary-color">Admin Access</p>
+                                        </div>
+                                    </div>
+                                    <div class="center-icon">
+                                        <p class="custom-badge-success copy-button" @onclick="ShowConfirmation">
+                                            Remove Access
+                                        </p>
+                                        @* @if (AdminAccessService.hasAdminAccess)
+                                        {
+                                        <p class="custom-badge-success copy-button" @onclick="NavigateToAdminAccessCommand.Execute">
+                                        Request Granted
+                                        </p>
+                                        }
+                                        else
+                                        {
+                                        <p class="custom-badge copy-button" @onclick="NavigateToAdminAccessCommand.Execute">
+                                        Request Access
+                                        </p>
+                                        } *@
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="card-header">
+                                    <div class="profile-info">
+                                        <div class="activity-info">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lock-fill" viewBox="0 0 16 16">
+                                                <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2" />
+                                            </svg>
+                                        </div>
+                                        <div class="user-details">
+                                            @* <div>@(AdminAccessService.hasAdminAccess ? "Granted" : "Expired")</div> *@
+                                            <div>Expired</div>
+                                            <p class="secondary-color">Admin Access</p>
+                                        </div>
+                                    </div>
+                                    <div class="center-icon">
+                                        <p class="copy-button" style="background-color: gray; color: black; font-weight:900; padding: 5px 10px; border-radius:5px;">
+                                            Access Denied
+                                        </p>
+                                        @* @if (AdminAccessService.hasAdminAccess)
+                                        {
+                                        <p class="custom-badge-success copy-button" @onclick="NavigateToAdminAccessCommand.Execute">
+                                        Request Granted
+                                        </p>
+                                        }
+                                        else
+                                        {
+                                        <p class="custom-badge copy-button" @onclick="NavigateToAdminAccessCommand.Execute">
+                                        Request Access
+                                        </p>
+                                        } *@
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                    <div id="HOSTNAME" class="user-card">
+                        <div class="card-header">
+                            <div class="profile-info">
+                                <div class="activity-info">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-display" viewBox="0 0 16 16">
+                                        <path d="M0 4s0-2 2-2h12s2 0 2 2v6s0 2-2 2h-4q0 1 .25 1.5H11a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1h.75Q6 13 6 12H2s-2 0-2-2zm1.398-.855a.76.76 0 0 0-.254.302A1.5 1.5 0 0 0 1 4.01V10c0 .325.078.502.145.602q.105.156.302.254a1.5 1.5 0 0 0 .538.143L2.01 11H14c.325 0 .502-.078.602-.145a.76.76 0 0 0 .254-.302 1.5 1.5 0 0 0 .143-.538L15 9.99V4c0-.325-.078-.502-.145-.602a.76.76 0 0 0-.302-.254A1.5 1.5 0 0 0 13.99 3H2c-.325 0-.502.078-.602.145" />
+                                    </svg>
+                                </div>
+
+                                <div class="user-details">
+                                    <div>@DevicesService.currentDevice.hostname</div>
+                                    <p class="secondary-color">HOSTNAME</p>
+                                </div>
+                            </div>
+                            <div class="center-icon">
+                                <svg @onclick="(async () => await CopyToClipboard(DevicesService.currentDevice.hostname))" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-copy copy-button" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z" />
+                                </svg>
+
+                                <p class="">
+                                    <span class="secondary-color"> UPTIME:</span>
+                                    @UpTime
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="IP" class="user-card">
+                        <div class="card-header">
+                            <div class="profile-info">
+                                <div class="activity-info">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-router" viewBox="0 0 16 16">
+                                        <path d="M5.525 3.025a3.5 3.5 0 0 1 4.95 0 .5.5 0 1 0 .707-.707 4.5 4.5 0 0 0-6.364 0 .5.5 0 0 0 .707.707" />
+                                        <path d="M6.94 4.44a1.5 1.5 0 0 1 2.12 0 .5.5 0 0 0 .708-.708 2.5 2.5 0 0 0-3.536 0 .5.5 0 0 0 .707.707ZM2.5 11a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1m4.5-.5a.5.5 0 1 0 1 0 .5.5 0 0 0-1 0m2.5.5a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1m1.5-.5a.5.5 0 1 0 1 0 .5.5 0 0 0-1 0m2 0a.5.5 0 1 0 1 0 .5.5 0 0 0-1 0" />
+                                        <path d="M2.974 2.342a.5.5 0 1 0-.948.316L3.806 8H1.5A1.5 1.5 0 0 0 0 9.5v2A1.5 1.5 0 0 0 1.5 13H2a.5.5 0 0 0 .5.5h2A.5.5 0 0 0 5 13h6a.5.5 0 0 0 .5.5h2a.5.5 0 0 0 .5-.5h.5a1.5 1.5 0 0 0 1.5-1.5v-2A1.5 1.5 0 0 0 14.5 8h-2.306l1.78-5.342a.5.5 0 1 0-.948-.316L11.14 8H4.86zM14.5 9a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 1 .5-.5z" />
+                                        <path d="M8.5 5.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0" />
+                                    </svg>
+                                </div>
+
+                                <div class="user-details">
+                                    <div>@DevicesService.currentDevice.ip</div>
+                                    <p class="secondary-color">IP</p>
+                                </div>
+                            </div>
+                            <div class="center-icon">
+                                <svg @onclick="(async () => await CopyToClipboard(DevicesService.currentDevice.ip))" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-copy copy-button" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="ASSET-TAG" class="user-card">
+                        <div class="card-header">
+                            <div class="profile-info">
+                                <div class="activity-info">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-tag" viewBox="0 0 16 16">
+                                        <path d="M6 4.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m-1 0a.5.5 0 1 0-1 0 .5.5 0 0 0 1 0" />
+                                        <path d="M2 1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 1 6.586V2a1 1 0 0 1 1-1m0 5.586 7 7L13.586 9l-7-7H2z" />
+                                    </svg>
+                                </div>
+
+                                <div class="user-details">
+                                    <div>@DevicesService.currentDevice.assetTag</div>
+                                    <p class="secondary-color">ASSET TAG</p>
+                                </div>
+                            </div>
+                            <div class="center-icon">
+                                <svg @onclick="(async () => await CopyToClipboard(DevicesService.currentDevice.assetTag))" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-copy copy-button" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="SERIAL-NUMBER" class="user-card">
+                        <div class="card-header">
+                            <div class="profile-info">
+                                <div class="activity-info">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-upc-scan" viewBox="0 0 16 16">
+                                        <path d="M1.5 1a.5.5 0 0 0-.5.5v3a.5.5 0 0 1-1 0v-3A1.5 1.5 0 0 1 1.5 0h3a.5.5 0 0 1 0 1zM11 .5a.5.5 0 0 1 .5-.5h3A1.5 1.5 0 0 1 16 1.5v3a.5.5 0 0 1-1 0v-3a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 1-.5-.5M.5 11a.5.5 0 0 1 .5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 1 0 1h-3A1.5 1.5 0 0 1 0 14.5v-3a.5.5 0 0 1 .5-.5m15 0a.5.5 0 0 1 .5.5v3a1.5 1.5 0 0 1-1.5 1.5h-3a.5.5 0 0 1 0-1h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 1 .5-.5M3 4.5a.5.5 0 0 1 1 0v7a.5.5 0 0 1-1 0zm2 0a.5.5 0 0 1 1 0v7a.5.5 0 0 1-1 0zm2 0a.5.5 0 0 1 1 0v7a.5.5 0 0 1-1 0zm2 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3 0a.5.5 0 0 1 1 0v7a.5.5 0 0 1-1 0z" />
+                                    </svg>
+                                </div>
+
+                                <div class="user-details">
+                                    <div>@DevicesService.currentDevice.serialNumber</div>
+                                    <p class="secondary-color">SERIAL NUMBER</p>
+                                </div>
+                            </div>
+                            <div class="center-icon">
+                                <svg @onclick="(async () => await CopyToClipboard(DevicesService.currentDevice.serialNumber))" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-copy copy-button" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="ASSET-STATUS" class="user-card">
+                        <div class="card-header">
+                            <div class="profile-info">
+                                <div class="activity-info">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt" viewBox="0 0 16 16">
+                                        <path d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A32 32 0 0 1 8 14.58a32 32 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10" />
+                                        <path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4m0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
+                                    </svg>
+                                </div>
+
+                                <div class="user-details">
+                                    <div>@DevicesService.currentDevice.assetStatus</div>
+                                    <p class="secondary-color">ASSET STATUS</p>
+                                </div>
+                            </div>
+                            <div class="center-icon">
+                                <svg @onclick="(async () => await CopyToClipboard(DevicesService.currentDevice.assetStatus))" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-copy copy-button" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="PRIMARY-USER" class="user-card">
+                        <div class="card-header">
+                            <div class="profile-info">
+                                <div class="activity-info">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+                                        <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
+                                    </svg>
+                                </div>
+
+                                <div class="user-details">
+                                    <div>@DevicesService.currentDevice.primaryUser</div>
+                                    <p class="secondary-color">PRIMARY USER</p>
+                                </div>
+                            </div>
+                            <div class="center-icon">
+                                <svg @onclick="(async () => await CopyToClipboard(DevicesService.currentDevice.primaryUser))" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-copy copy-button" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>
+
+
+@code {
+    
+    private async Task ShowConfirmation()
+    {
+        var result = await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to proceed?");
+
+        if (result)
+        {
+            removeUser();
+        }
+        else
+        {
+            
+        }
+    }
+}

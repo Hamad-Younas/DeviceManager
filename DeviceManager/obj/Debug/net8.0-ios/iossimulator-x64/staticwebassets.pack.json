@@ -1,0 +1,45 @@
+{
+  "Files": [
+    {
+      "Id": "E:\\Fiverr\\Device Manager\\DeviceManager\\DeviceManager\\obj\\Debug\\net8.0-ios\\iossimulator-x64\\scopedcss\\bundle\\DeviceManager.styles.css",
+      "PackagePath": "staticwebassets\\DeviceManager.styles.css"
+    },
+    {
+      "Id": "E:\\Fiverr\\Device Manager\\DeviceManager\\DeviceManager\\wwwroot\\css\\app.css",
+      "PackagePath": "staticwebassets\\css\\app.css"
+    },
+    {
+      "Id": "E:\\Fiverr\\Device Manager\\DeviceManager\\DeviceManager\\wwwroot\\css\\bootstrap\\bootstrap.min.css",
+      "PackagePath": "staticwebassets\\css\\bootstrap\\bootstrap.min.css"
+    },
+    {
+      "Id": "E:\\Fiverr\\Device Manager\\DeviceManager\\DeviceManager\\wwwroot\\css\\bootstrap\\bootstrap.min.css.map",
+      "PackagePath": "staticwebassets\\css\\bootstrap\\bootstrap.min.css.map"
+    },
+    {
+      "Id": "E:\\Fiverr\\Device Manager\\DeviceManager\\DeviceManager\\wwwroot\\favicon.png",
+      "PackagePath": "staticwebassets\\favicon.png"
+    },
+    {
+      "Id": "E:\\Fiverr\\Device Manager\\DeviceManager\\DeviceManager\\wwwroot\\index.html",
+      "PackagePath": "staticwebassets\\index.html"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0-ios\\iossimulator-x64\\staticwebassets\\msbuild.DeviceManager.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0-ios\\iossimulator-x64\\staticwebassets\\msbuild.build.DeviceManager.props",
+      "PackagePath": "build\\DeviceManager.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0-ios\\iossimulator-x64\\staticwebassets\\msbuild.buildMultiTargeting.DeviceManager.props",
+      "PackagePath": "buildMultiTargeting\\DeviceManager.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0-ios\\iossimulator-x64\\staticwebassets\\msbuild.buildTransitive.DeviceManager.props",
+      "PackagePath": "buildTransitive\\DeviceManager.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

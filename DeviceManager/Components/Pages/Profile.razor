@@ -1,0 +1,240 @@
+﻿@page "/profile"
+@inject ThemeService ThemeService
+
+<div class="settings">
+    @if (support != null)
+    {
+        if (ThemeService.CurrentTheme == "system")
+        {
+            AppTheme systemTheme = Application.Current!.RequestedTheme;
+            ThemeService.CurrentTheme = (systemTheme == AppTheme.Dark) ? "dark" : "light";
+            if (ThemeService.CurrentTheme == "dark")
+            {
+                <h1>
+                    <span>
+
+                        <img src="/Images/logo2.jpg" width="60" height="40" alt="logo" />
+                    </span> @support.displayName
+                </h1>
+            }
+            else
+            {
+                <h1>
+                    <span>
+
+                        <img src="/Images/logo.jpg" width="60" height="40" alt="logo" />
+                    </span> @support.displayName
+                </h1>
+            }
+        }
+        else if (ThemeService.CurrentTheme == "dark")
+        {
+            <h1>
+                <span>
+
+                    <img src="/Images/logo.jpg" width="60" height="40" alt="logo" />
+                </span> @support.displayName
+            </h1>
+        }
+        else
+        {
+            <h1>
+                <span>
+
+                    <img src="/Images/logo2.jpg" width="60" height="40" alt="logo" />
+                </span> @support.displayName
+            </h1>
+        }
+    }
+    <div class="settings grid">
+        <h2>Profile</h2>
+        @if (user == null)
+        {
+            <p>Loading...</p>
+        }
+        else
+        {
+        <div class="mt-1 mb-1" style="margin: 30px 24px;">
+            <div class="row">
+                <div class="col-md-4">
+                    Full Name
+                </div>
+                <div class="col-md-4">
+                    @{
+                        var uname = user?.givenName ?? string.Empty;
+                    }
+                    <input class="text-block secondary-color w-100" value="@uname" />
+                </div>
+                <div class="col-md-4">
+                    @{
+                        var ulast = user?.displayName;
+                        int spaceIndex = ulast.IndexOf(' ');
+                        string lastName = spaceIndex != -1 ? ulast.Substring(spaceIndex + 1) : string.Empty;
+                    }
+                    <input class="text-block secondary-color w-100" value="@lastName" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    Display Name
+                </div>
+                <div class="col-md-8">
+                    @{
+                        var udn = user?.displayName ?? string.Empty;
+                    }
+                    <input class="text-block secondary-color w-100" value="@udn" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    Object Id
+                </div>
+                <div class="col-md-8">
+                    @{
+                        var uid = user?.id ?? string.Empty;
+                    }
+                    <input class="text-block secondary-color w-100" value="@uid" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    Last Password Change
+                </div>
+                <div class="col-md-8">
+                    @{
+                        var displayValue = user?.signInSessionsValidFromDateTime ?? string.Empty;
+                    }
+                    <input class="text-block secondary-color w-100" value="@displayValue" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    Job Title
+                </div>
+                <div class="col-md-8">
+                    @{
+                        var job = user?.jobTitle ?? string.Empty;
+                    }
+                    <input class="text-block secondary-color w-100" value="@job" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    Employee ID
+                </div>
+                <div class="col-md-8">
+                    @{
+                        var eid = user?.employeeId ?? string.Empty;
+                    }
+                    <input class="text-block secondary-color w-100" value="@eid" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    Office Location
+                </div>
+                <div class="col-md-8">
+                    @{
+                        var of = user?.officeLocation ?? string.Empty;
+                    }
+                    <input class="text-block secondary-color w-100" value="@of" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    Email Address
+                </div>
+                <div class="col-md-8">
+                    @{
+                        var mail = user?.mail ?? string.Empty;
+                    }
+                    <input class="text-block secondary-color w-100" value="@mail" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    Phone Number
+                </div>
+                <div class="col-md-8">
+                    @{
+                        var mob = user?.mobilePhone ?? string.Empty;
+                    }
+                    <input class="text-block secondary-color w-100" value="@mob" />
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-4">
+                    On-Premises SAM Account Name
+                </div>
+                <div class="col-md-8">
+                    @{
+                        var sam = user?.onPremisesSamAccountName ?? string.Empty;
+                    }
+                    <input class="text-block secondary-color w-100" value="@sam" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    Employee Type
+                </div>
+                <div class="col-md-8">
+                    @{
+                        var et = user?.employeeType ?? string.Empty;
+                    }
+                    <input class="text-block secondary-color w-100" value="@et" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    On-Premises Security Identifier
+                </div>
+                <div class="col-md-8">
+                    @{
+                        var pre = user?.onPremisesSecurityIdentifier ?? string.Empty;
+                    }
+                    <input class="text-block secondary-color w-100" value="@pre" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    Manager's Name
+                </div>
+                <div class="col-md-8">
+                    @{
+                        var name = manager?.displayName ?? string.Empty;
+                    }
+                    <input class="text-block secondary-color w-100" value="@name" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    Manager's Email
+                </div>
+                <div class="col-md-8">
+                    @{
+                        var mmail = manager?.mail ?? string.Empty;
+                    }
+                    <input class="text-block secondary-color w-100" value="@mmail" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    Manager's Id
+                </div>
+                <div class="col-md-8">
+                    @{
+                        var mmid = manager?.id ?? string.Empty;
+                    }
+                    <input class="text-block secondary-color w-100" value="@mmid" />
+                </div>
+            </div>
+        </div>
+        }
+    </div>
+</div>
+
+@code {
+    
+}

@@ -1,0 +1,13 @@
+﻿.text-block {
+    display: flex;
+    font-size: 0.75rem;
+    background-color: var(--text-block);
+    border: 1px solid var( --border);
+    border-radius: 8px;
+    padding: 10px;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+.margin-10{
+    margin-right:1rem;
+}

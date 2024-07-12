@@ -1,0 +1,564 @@
+﻿@page "/devices"
+@using DeviceManager.Services
+@using DeviceManager.Models
+@using Newtonsoft.Json;
+@inject IJSRuntime JSRuntime
+@inject ThemeService ThemeService
+
+
+<div class="settings pageHeight">
+    @if (support != null)
+    {
+        if (ThemeService.CurrentTheme == "system")
+        {
+            AppTheme systemTheme = Application.Current!.RequestedTheme;
+            ThemeService.CurrentTheme = (systemTheme == AppTheme.Dark) ? "dark" : "light";
+            if (ThemeService.CurrentTheme == "dark")
+            {
+                <h1>
+                    <span>
+
+                        <img src="/Images/logo2.jpg" width="60" height="40" alt="logo" />
+                    </span> @support.displayName
+                </h1>
+            }
+            else
+            {
+                <h1>
+                    <span>
+
+                        <img src="/Images/logo.jpg" width="60" height="40" alt="logo" />
+                    </span> @support.displayName
+                </h1>
+            }
+        }
+        else if (ThemeService.CurrentTheme == "dark")
+        {
+            <h1>
+                <span>
+
+                    <img src="/Images/logo.jpg" width="60" height="40" alt="logo" />
+                </span> @support.displayName
+            </h1>
+        }
+        else
+        {
+            <h1>
+                <span>
+
+                    <img src="/Images/logo2.jpg" width="60" height="40" alt="logo" />
+                </span> @support.displayName
+            </h1>
+        }
+    }
+    <div class="settings grid">
+        <h2>My Devices</h2>
+        <div class="grid-devices">
+            <div class="devices-detail" key="@refresh">
+                @for (int i = 0; i < deviceInfo?.ODataCount; i++)
+                {
+                    string upn = GetUPN();
+                    @* string upn = "DeviceManager@t26qw.onmicrosoft.com"; *@
+                        @* string User = Environment.UserName; *@
+                    if (deviceInfo.devices[i].userPrincipalName != upn)
+                    {
+                        continue;
+                    }
+                    int currentIndex = i;
+                    <div id="@($"USERNAME_{currentIndex}")" class="user-card">
+                        <div class="card-header">
+                            <div class="profile-info">
+                                <div class="activity-info" @onclick="() => ShowDeviceInfo(currentIndex)">
+                                    <svg width="38" height="32" viewBox="0 0 38 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M17.8701 5.27473V11.3709H25.9646V4.06055L17.8701 5.27473ZM25.4587 10.865H18.3761V5.70473L25.4587 4.66763V10.865ZM11.0404 11.4468H17.3642V5.3253L11.0404 6.26124V11.4468ZM11.5463 6.69126L16.8583 5.9071V10.9409H11.5463V6.69126ZM17.8701 17.8718L25.9646 19.086V11.9527H17.8701V17.8718ZM18.3761 12.4586H25.4587V18.5041L18.3761 17.4417V12.4586ZM11.0404 16.8853L17.3642 17.8212V11.9527H11.0404V16.8853ZM11.5463 12.4586H16.8583V17.2394L11.5463 16.4552V12.4586Z" fill="#989898" />
+                                        <path d="M35.6194 0H2.38065C1.84089 0.000658239 1.32343 0.215367 0.941766 0.597032C0.560101 0.978697 0.345392 1.49616 0.344734 2.03591V24.495C0.345228 25.0348 0.559864 25.5525 0.941546 25.9343C1.32323 26.3161 1.84078 26.5309 2.38065 26.5315H15.8696V28.0899H12.776C12.2601 28.0905 11.7656 28.2957 11.4009 28.6605C11.0361 29.0252 10.8309 29.5198 10.8302 30.0356V31.3782C10.8302 31.5431 10.8958 31.7012 11.0124 31.8179C11.129 31.9345 11.2872 32 11.4521 32H26.5479C26.7128 32 26.871 31.9345 26.9876 31.8179C27.1043 31.7012 27.1698 31.5431 27.1698 31.3782V30.035C27.1689 29.5191 26.9636 29.0247 26.5987 28.66C26.2338 28.2954 25.7392 28.0903 25.2234 28.0899H22.1304V26.5315H35.6194C36.1593 26.5309 36.677 26.316 37.0587 25.934C37.4404 25.5521 37.6549 25.0343 37.6553 24.4944V2.03591C37.6546 1.49616 37.4399 0.978697 37.0582 0.597032C36.6766 0.215367 36.1591 0.000658239 35.6194 0ZM2.38065 1.24368H35.6194C36.0559 1.24368 36.4116 1.59938 36.4116 2.03591V21.1955H1.58842V2.03653C1.58842 1.59938 1.94411 1.24368 2.38065 1.24368ZM25.9261 30.035V30.7563H12.0739V30.035C12.0743 29.8488 12.1484 29.6704 12.2802 29.5389C12.4119 29.4074 12.5905 29.3335 12.7766 29.3335H25.224C25.4102 29.3337 25.5886 29.4077 25.7203 29.5394C25.8519 29.671 25.9259 29.8488 25.9261 30.035ZM20.8867 28.0899H17.1133V26.5315H20.8867V28.0899ZM35.6194 25.2878H2.38065C2.17042 25.2875 1.96892 25.2038 1.82038 25.055C1.67185 24.9062 1.58842 24.7046 1.58842 24.4944V22.4386H36.4116V24.4944C36.4116 24.9315 36.0559 25.2878 35.6194 25.2878Z" fill="#989898" />
+                                    </svg>
+                                </div>
+                                <div class="user-details">
+                                    <div>"@deviceInfo?.devices[i].deviceName"</div>
+                                    @* <p class="secondary-color">"@deviceInfo?.devices[i].managedDeviceName"</p> *@
+                                    <div class="" style="display: flex; align-items: center; justify-content: space-between">
+                                        @if (nick != null)
+                                        {
+                                            int count = 0;
+                                            foreach (var nickname in nick)
+                                            {
+                                                if (nickname.id == deviceInfo.devices[i].id)
+                                                {
+                                                    count = 1;
+                                                    <p>@nickname.nickname</p>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" width="20" height="20" viewBox="0 0 32 32" @onclick="() => showModel(currentIndex)">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
+                                                    </svg>
+                                                }
+                                            }
+                                            if(count == 0)
+                                            {
+                                                <p style="cursor: pointer; color:blue;" @onclick ="() => showModel(currentIndex)">Add NickName</p>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <p style="cursor: pointer; color:blue;" @onclick="() => showModel(currentIndex)">Add NickName</p>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            @if (fav != null)
+                            {
+                                bool check = false;
+                                foreach (var favorite in fav)
+                                {
+                                    if (favorite.id == deviceInfo.devices[i].id && favorite.favourite == true)
+                                    {
+                                        check = true;
+                                    }
+                                }
+                                if (check)
+                                {
+                                    <div class="center-icon" @onclick="() => Favourite1(currentIndex)">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" class="bi bi-star" fill="rgba(255,190,0,1)" viewBox="0 0 16 16">
+                                            <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.56.56 0 0 0-.163-.505L1.71 6.745l4.052-.576a.53.53 0 0 0 .393-.288L8 2.223l1.847 3.658a.53.53 0 0 0 .393.288l4.052.575-2.906 2.77a.56.56 0 0 0-.163.506l.694 3.957-3.686-1.894a.5.5 0 0 0-.461 0z" fill="rgba(255,190,0,1)" />
+                                        </svg>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="center-icon" @onclick="() => Favourite(currentIndex)">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-star" viewBox="0 0 16 16">
+                                            <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.56.56 0 0 0-.163-.505L1.71 6.745l4.052-.576a.53.53 0 0 0 .393-.288L8 2.223l1.847 3.658a.53.53 0 0 0 .393.288l4.052.575-2.906 2.77a.56.56 0 0 0-.163.506l.694 3.957-3.686-1.894a.5.5 0 0 0-.461 0z" />
+                                        </svg>
+                                    </div>
+                                }
+                            }
+
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="devices-detail" id="deviceDetails">
+                
+
+            </div>
+        </div>
+        @if (model2)
+        {
+            <div class="modal-background">
+                <div class="modal-content">
+                    <input type="text" placeholder="Nick Name" @bind="nicame.name" @oninput="UpdateName" />
+                    <button @onclick="CloseModalClicked">Change</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@code{
+    private bool model2 = false;
+    private string nickName = "";
+    private int idofloop = 0;
+    private string did = "";
+    private List<FavouriteInfo> fav;
+    public List<NickNameModel> nick;
+    private nicknamebind nicame = new nicknamebind();
+    private bool refresh = false;
+
+    private void UpdateName(ChangeEventArgs args)
+    {
+        nicame.name = args.Value.ToString();
+    }
+    private void showModel(int i)
+    {
+        nicame.name = "";
+        idofloop = i;
+        did = deviceInfo.devices[i].id;
+        model2 = true;
+        StateHasChanged();
+    }
+    private void CloseModal()
+    {
+        model2 = false;
+        StateHasChanged();
+    }
+    private void CloseModalClicked()
+    {
+        string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "nickname.json");
+
+        List<NickNameModel> favorites = new List<NickNameModel>
+        {
+        new NickNameModel { id = did, nickname = nicame.name }
+        };
+
+        string jsonContent = JsonConvert.SerializeObject(favorites);
+
+        if (File.Exists(filePath))
+        {
+            string existingContent = File.ReadAllText(filePath);
+
+            List<NickNameModel> existingFavorites = JsonConvert.DeserializeObject<List<NickNameModel>>(existingContent);
+
+            NickNameModel existingItem = existingFavorites.FirstOrDefault(item => item.id == did);
+
+            if (existingItem != null)
+            {
+                existingItem.nickname = nicame.name;
+            }
+            else
+            {
+                existingFavorites.AddRange(favorites);
+            }
+
+            string updatedContent = JsonConvert.SerializeObject(existingFavorites);
+
+            File.WriteAllText(filePath, updatedContent);
+        }
+        else
+        {
+            File.WriteAllText(filePath, jsonContent);
+        }
+        string grouptag1 = "";
+        string filePath2 = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "grouptag.json");
+        if (File.Exists(filePath))
+        {
+            string jsonContent2 = File.ReadAllText(filePath2);
+
+            groupTagModel = JsonConvert.DeserializeObject<GroupTagModel>(jsonContent2);
+            for (int j = 0; j < groupTagModel.ODataCount; j++)
+            {
+                if (groupTagModel.groupname[j].azureAdDeviceId == deviceInfo.devices[idofloop].azureADDeviceId)
+                {
+                    grouptag1 = groupTagModel.groupname[j].groupTag;
+                }
+            }
+        }
+        JSRuntime.InvokeVoidAsync("showInfo", deviceInfo.devices[idofloop], grouptag1, nicame.name);
+        model2 = false;
+        InitializeData2();
+        StateHasChanged();
+    }
+    private void InitializeData2()
+    {
+        nick = ReadNick();
+    }
+    private void InitializeData()
+    {
+        fav = ReadFav();
+    }
+    protected override void OnInitialized()
+    {
+        InitializeData();
+        InitializeData2();
+        base.OnInitialized();
+    }
+
+    private void ShowDeviceInfo(int i)
+    {
+        string nik = "";
+        foreach (var nk in nick)
+        {
+            if (nk.id == deviceInfo.devices[i].id)
+            {
+                nik = nk.nickname;
+            }
+        }
+        string grouptag1 = "";
+        string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "grouptag.json");
+        if (File.Exists(filePath))
+        {
+            string jsonContent = File.ReadAllText(filePath);
+
+            groupTagModel = JsonConvert.DeserializeObject<GroupTagModel>(jsonContent);
+            for(int j = 0; j<groupTagModel.ODataCount; j++)
+            {
+                if(groupTagModel.groupname[j].azureAdDeviceId == deviceInfo.devices[i].azureADDeviceId)
+                {
+                    grouptag1 = groupTagModel.groupname[j].groupTag;
+                }
+            }
+        }
+        JSRuntime.InvokeVoidAsync("showInfo", deviceInfo.devices[i], grouptag1, nik);
+    }
+
+    private void Favourite(int i)
+    {
+        string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "favourite.json");
+
+        List<FavouriteInfo> favorites = new List<FavouriteInfo>
+    {
+        new FavouriteInfo { id = deviceInfo.devices[i].id, favourite = true }
+    };
+
+        string jsonContent = JsonConvert.SerializeObject(favorites);
+
+        if (File.Exists(filePath))
+        {
+            string existingContent = File.ReadAllText(filePath);
+
+            List<FavouriteInfo> existingFavorites = JsonConvert.DeserializeObject<List<FavouriteInfo>>(existingContent);
+
+            FavouriteInfo existingItem = existingFavorites.FirstOrDefault(item => item.id == deviceInfo.devices[i].id);
+
+            if (existingItem != null)
+            {
+                existingItem.favourite = true; 
+            }
+            else
+            {
+                existingFavorites.AddRange(favorites);
+            }
+
+            string updatedContent = JsonConvert.SerializeObject(existingFavorites);
+
+            File.WriteAllText(filePath, updatedContent);
+        }
+        else
+        {
+            File.WriteAllText(filePath, jsonContent);
+        }
+        Refresh();
+        InitializeData();
+        StateHasChanged();
+    }
+
+
+
+    private void Favourite1(int i)
+    {
+        string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "favourite.json");
+
+        List<FavouriteInfo> favorites = new List<FavouriteInfo>
+    {
+        new FavouriteInfo { id = deviceInfo.devices[i].id, favourite = false }
+    };
+
+        string jsonContent = JsonConvert.SerializeObject(favorites);
+
+        if (File.Exists(filePath))
+        {
+            string existingContent = File.ReadAllText(filePath);
+
+            List<FavouriteInfo> existingFavorites = JsonConvert.DeserializeObject<List<FavouriteInfo>>(existingContent);
+
+            FavouriteInfo existingItem = existingFavorites.FirstOrDefault(item => item.id == deviceInfo.devices[i].id);
+
+            if (existingItem != null)
+            {
+                existingItem.favourite = false;
+            }
+            else
+            {
+                existingFavorites.Add(new FavouriteInfo { id = deviceInfo.devices[i].id, favourite = false });
+            }
+
+            string updatedContent = JsonConvert.SerializeObject(existingFavorites);
+
+            File.WriteAllText(filePath, updatedContent);
+        }
+        else
+        {
+            // Create a new file with the JSON array
+            File.WriteAllText(filePath, jsonContent);
+        }
+        Refresh();
+        InitializeData();
+        StateHasChanged();
+    }
+
+    private List<FavouriteInfo> ReadFav()
+    {
+        string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "favourite.json");
+
+        if (File.Exists(filePath))
+        {
+            string jsonContent = File.ReadAllText(filePath);
+
+            List<FavouriteInfo> favList = JsonConvert.DeserializeObject<List<FavouriteInfo>>(jsonContent);
+
+            return favList;
+        }
+
+        return new List<FavouriteInfo>();
+    }
+    private List<NickNameModel> ReadNick()
+    {
+        string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "nickname.json");
+
+        if (File.Exists(filePath))
+        {
+            string jsonContent = File.ReadAllText(filePath);
+
+            List<NickNameModel> favList = JsonConvert.DeserializeObject<List<NickNameModel>>(jsonContent);
+
+            return favList;
+        }
+
+        return new List<NickNameModel>();
+    }
+    private void Refresh()
+    {
+        refresh = !refresh;
+        StateHasChanged();
+    }
+}
+
+    
+
+<script defer>
+    function showInfo(index, grouptag, nik) {
+        try {
+            var deviceInfo = index 
+            if (nik == "") 
+            {
+                nik = "Add Nickname"
+            }
+            var detailsHtml = `
+                <div class="scrollable-div">
+                        <p class="text-block">
+                            <span class="secondary-color">
+                                Device name (Host Name)
+                            </span>
+                            ${deviceInfo.userDisplayName}
+                        </p>
+                        <p class="text-block">
+                            <span class="secondary-color">
+                                Device nickname
+                            </span>
+                             ${nik}
+                        </p>
+                        <p class="text-block">
+                            <span class="secondary-color">
+                                Management name (Asset Tag)
+                            </span>
+                                ${deviceInfo.managedDeviceName}
+                        </p>
+                        <p class="text-block">
+                            <span class="secondary-color">
+                                Ownership
+                            </span>
+                                ${deviceInfo.managedDeviceOwnerType}
+                        </p>
+                        <p class="text-block">
+                            <span class="secondary-color">
+                                Serial number
+                            </span>
+                                    ${deviceInfo.serialNumber}
+                        </p>
+                        <p class="text-block">
+                            <span class="secondary-color">
+                                Device manufacturer
+                            </span>
+                                    ${deviceInfo.manufacturer}
+                        </p>
+                        <p class="text-block">
+                            <span class="secondary-color">
+                                Device model
+                            </span>
+                                   ${deviceInfo.model}
+                        </p>
+                        <p class="text-block">
+                            <span class="secondary-color">
+                                Group Tag (Asset Status)
+                            </span>
+                                    ${grouptag}
+                        </p>
+                        <p class="text-block">
+                            <span class="secondary-color">
+                                Primary User
+                            </span>
+                                    ${deviceInfo.userPrincipalName}
+                        </p>
+                        <p class="text-block">
+                            <span class="secondary-color">
+                                Compliance
+                            </span>
+                                    ${deviceInfo.complianceState}
+                        </p>
+                        <p class="text-block">
+                            <span class="secondary-color">
+                                Last check-in time
+                            </span>
+                                   ${deviceInfo.lastSyncDateTime}
+                        </p>
+                        <p class="text-block">
+                            <span class="secondary-color">
+                                Enrollment profile
+                            </span>
+                                    ${deviceInfo.deviceEnrollmentType}
+                        </p>
+                        <p class="text-block">
+                            <span class="secondary-color">
+                                Wi-Fi MAC
+                            </span>
+                                    ${deviceInfo.wiFiMacAddress}
+                        </p>
+                        <p class="text-block">
+                            <span class="secondary-color">
+                                Ethernet MAC
+                            </span>
+                                   ${deviceInfo.ethernetMacAddress}
+                        </p>
+                        <p class="text-block">
+                            <span class="secondary-color">
+                                Wi-Fi IPv4 address
+                            </span>
+                                    192.168.0.1
+                        </p>
+                        <p class="text-block">
+                            <span class="secondary-color">
+                                Wired IPv4 address
+                            </span>
+                                    172.16.0.1
+                        </p>
+                        <p class="text-block">
+                            <span class="secondary-color">
+                                Intune Device ID
+                            </span>
+                                    ${deviceInfo.id}
+                        </p>
+                        <p class="text-block">
+                            <span class="secondary-color">
+                                Microsoft Entra Device ID
+                            </span>
+                                    ${deviceInfo.easDeviceId}
+                        </p>
+                        <p class="text-block">
+                            <span class="secondary-color">
+                                Operating system
+                            </span>
+                                    ${deviceInfo.azureADDeviceId}
+                        </p>
+                        <p class="text-block">
+                            <span class="secondary-color">
+                                Operating system version
+                            </span>
+                                    ${deviceInfo.operatingSystem}
+                        </p>
+                        <p class="text-block">
+                            <span class="secondary-color">
+                                Operating system SKU
+                            </span>
+                                    ${deviceInfo.osVersion}
+                        </p>
+                        <p class="text-block">
+                            <span class="secondary-color">
+                                Total storage space
+                            </span>
+                                    ${deviceInfo.totalStorageSpaceInBytes}
+                        </p>
+                        <p class="text-block">
+                            <span class="secondary-color">
+                                Free storage space
+                            </span>
+                                    ${deviceInfo.freeStorageSpaceInBytes}
+                        </p>
+                     </div>
+                `;
+
+            // Update the device details div
+            document.getElementById('deviceDetails').innerHTML = detailsHtml;
+        }
+        catch (error) {
+            console.error(error)
+        }
+    }
+</script>

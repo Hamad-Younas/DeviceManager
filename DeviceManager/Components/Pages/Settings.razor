@@ -1,0 +1,171 @@
+﻿@* TODO: Change the Theme if user have selected System and changes the device Theme *@
+@* TODO: The System selects dark or light radio button depending upon default theme*@
+
+
+@page "/settings"
+@using System.Diagnostics
+@using DeviceManager.Models
+@inject IJSRuntime JSRuntime
+@inject ThemeService ThemeService
+@using System.Diagnostics
+@using MatBlazor
+@inject IMatToaster Toaster
+@using Newtonsoft.Json
+
+
+<div class="settings">
+    @if (support != null)
+    {
+        if (ThemeService.CurrentTheme == "system")
+        {
+            AppTheme systemTheme = Application.Current!.RequestedTheme;
+            ThemeService.CurrentTheme = (systemTheme == AppTheme.Dark) ? "dark" : "light";
+            if (ThemeService.CurrentTheme == "dark")
+            {
+                <h1>
+                    <span>
+
+                        <img src="/Images/logo2.jpg" width="60" height="40" alt="logo" />
+                    </span> @support.displayName
+                </h1>
+            }
+            else
+            {
+                <h1>
+                    <span>
+
+                        <img src="/Images/logo.jpg" width="60" height="40" alt="logo" />
+                    </span> @support.displayName
+                </h1>
+            }
+        }
+        else if (ThemeService.CurrentTheme == "dark")
+        {
+            <h1>
+                <span>
+
+                    <img src="/Images/logo.jpg" width="60" height="40" alt="logo" />
+                </span> @support.displayName
+            </h1>
+        }
+        else
+        {
+            <h1>
+                <span>
+
+                    <img src="/Images/logo2.jpg" width="60" height="40" alt="logo" />
+                </span> @support.displayName
+            </h1>
+        }
+    }
+    <div class="settings grid">
+        <h2>Settings</h2>
+
+            <div class="flex-column ">
+                <label class="form-check">
+                    <input type="radio" class="form-check-input" name="theme" @onclick="SetSystemTheme" checked="@IsSystemTheme"> System
+                </label>
+                <label class="form-check">
+                    <input type="radio" class="form-check-input" name="theme" @onclick="SetDarkTheme" checked="@IsDarkTheme"> Dark
+                </label>
+                <label class="form-check">
+                    <input type="radio" class="form-check-input" name="theme" @onclick="SetLightTheme" checked="@IsLightTheme"> Light
+                </label>
+            </div>
+        </div>
+
+        
+    </div>
+
+@code {
+    private bool IsSystemTheme => ThemeService.CurrentTheme == "system";
+    private bool IsDarkTheme => ThemeService.CurrentTheme == "dark";
+    private bool IsLightTheme => ThemeService.CurrentTheme == "light";
+    private SupportModel support;
+    protected override void OnInitialized()
+    {
+        getLogoAndName();
+    }
+    private void getLogoAndName()
+    {
+        string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "support.json");
+        try
+        {
+            if (File.Exists(filePath))
+            {
+                string jsonContent = File.ReadAllText(filePath);
+                support = JsonConvert.DeserializeObject<SupportModel>(jsonContent);
+                // byte[] imageDataBytes = Convert.FromBase64String(support.darkBackgroundLogo.Value);
+                // string filePath6 = "E:\\fiverr\\maui\\New folder\\DeviceManager\\DeviceManager\\wwwroot\\Images\\logo.jpg";
+                // if (File.Exists(filePath6))
+                // {
+
+                // }
+                // else
+                // {
+                //     File.WriteAllBytes(filePath6, imageDataBytes);
+                // }
+            }
+            else
+            {
+                Toaster.Add($"Error: File not found at {filePath}", MatToastType.Danger, "error");
+            }
+        }
+        catch (Exception ex)
+        {
+            Toaster.Add($"Error: {ex.Message}", MatToastType.Danger, "error");
+        }
+    }
+
+    private async Task SetSystemTheme()
+    {
+        await SetTheme("system");
+    }
+
+    private async Task SetDarkTheme()
+    {
+        await SetTheme("dark");
+    }
+
+    private async Task SetLightTheme()
+    {
+        await SetTheme("light");
+    }
+
+    private async Task SetTheme(string theme)
+    {
+        try
+        {
+            if (theme == "system")
+            {
+                AppTheme systemTheme = Application.Current!.RequestedTheme;
+                ThemeService.CurrentTheme = (systemTheme == AppTheme.Dark) ? "dark" : "light";
+            }
+            else
+            {
+                ThemeService.CurrentTheme = theme;
+            }
+
+            await UpdateDarkModeClass(); 
+        }
+        catch (Exception ex)
+        {
+            // Handle or log the exception
+            Debug.WriteLine($"An error occurred while setting the theme: {ex}");
+        }
+    }
+
+    private async Task UpdateDarkModeClass()
+    {
+        try
+        {
+            var module = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./js/site.js");
+            await module.InvokeVoidAsync("setTheme", ThemeService.CurrentTheme);
+        }
+        catch (Exception ex)
+        {
+            // Handle or log the exception
+            Debug.WriteLine($"An error occurred while updating the dark mode class: {ex}");
+        }
+    }
+}
